@@ -8,6 +8,10 @@ npm # 开发说明
 项目名称：学成网
 项目描述：vue移动端开发 - 学成网，
 
+## 技术栈
+
+vue2 + vue-router + vuex + webpack + mintUi + axios + sass 
+
 ## git版本控制
 
 git clone https://gitee.com/gitLixg/e-learning-mob-vue.git
