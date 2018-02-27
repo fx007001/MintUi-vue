@@ -1,0 +1,43 @@
+/* 常用颜色 */
+$cl0:#26a2ff;
+$cl1:#fff;
+$cl2:#000;
+$cl3:#333;
+$cl4:#93979a;     /* 搜索文字颜色 */
+$cl5:#eaeaea;     /* 我的虚线颜色 */
+$cl6:#666;
+$cl7:#777;
+$cl8:#888;
+$cl9:#999;
+$cl10:#f3f5f7;     /* 背景颜色 */
+$cl11:#f4f5f8;     /* 搜索框背景颜色 */
+$cl12:#ff7c2d;
+$cl13:#f50b17;
+$cl14:#cecece;
+$cl15:#ff7c2d;
+/* 常用字号 */
+/* 自定义mint ui Header样式 */
+.mint-header{
+  background:$cl1;
+  box-shadow: 0px 2px 2px $cl5;
+  color:$cl6;
+}
+/* 自定义mint ui搜索框样式 */
+.mint-search{
+  position: relative;
+  z-index: 10;
+  box-shadow: 0px 2px 2px $cl5;
+  height: inherit;
+  .mint-searchbar{
+    background: $cl1;
+    .mint-searchbar-inner{
+      background: $cl11;
+      input{
+        background: $cl11;
+        padding: 0 3px;
+      }
+      .mintui{font-size: 14px;color:$cl6;}
+    }
+  }
+}
+
