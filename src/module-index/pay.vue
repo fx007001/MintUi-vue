@@ -7,12 +7,12 @@
       </router-link>
     </mt-header>
     <div class="courseInfo">
-      <div class="tit">商品信息</div>
+      <div class="tit">商品信息 : <span></span></div>
       <div class="cont">
-        <div class="ico"><img src="../assets/cs1.png" alt=""></div>
+        <div class="ico"><img :src="imgBaseUrl + payCoursesData.cover_img" alt=""></div>
         <div class="info">
-          <p class="name">Think PHP 5.0 博客系统实战项目</p>
-          <p class="pic">￥299</p>
+          <p class="name">{{payCoursesData.name}}</p>
+          <p class="pic">￥{{payCoursesData.price}}</p>
         </div>
       </div>
     </div>
@@ -31,12 +31,16 @@
 </template>
 <script>
   import learingFooter from './../components/footer.vue'
+  import IndexApi from '../api/learingInd.js'
+  import cfg from './../utils/config'
 
   export default {
     name: 'learingIndexPay',
     data () {
       return {
         value: 'wx',
+        imgBaseUrl: cfg.imgBaseUrl,
+        payCoursesData: [],
         options: [
           {
             label: '微信',
@@ -47,6 +51,24 @@
             value: 'zfb'
           }]
       }
+    },
+    methods:{
+      init: function() {
+        this.getCourseItem(this.$route.params.classId)
+      },
+      getCourseItem: function(obj){
+        IndexApi.payCourses({id:obj}, (ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            console.log(ret.data)
+            this.payCoursesData = ret.data
+          }
+        })
+      }
+    },
+    mounted:function(){
+      this.init()
     },
     components: {
       learingFooter

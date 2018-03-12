@@ -1,78 +1,20 @@
 <template>
   <div class="learingList">
-    <mt-search v-model="searchValue"></mt-search>
+    <div @click="goSeach"><mt-search v-model="searchValue"></mt-search></div>
     <div class="listBox">
       <mt-navbar v-model="selected">
-        <mt-tab-item id="a">大数据</mt-tab-item>
-        <mt-tab-item id="b">前端</mt-tab-item>
-        <mt-tab-item id="c">运维</mt-tab-item>
-        <mt-tab-item id="d">云计算</mt-tab-item>
+        <mt-tab-item v-for="(item, index) in listItemData" :key="index" :id="index" on-click="selected()">{{item.name}}</mt-tab-item>
       </mt-navbar>
-
       <!-- tab-container -->
-      <mt-tab-container v-model="selected">
-        <mt-tab-container-item id="a">
-          <div class="banner"><img src="../assets/banner2.png" alt=""></div>
+      <mt-tab-container v-model="selected" >
+        <mt-tab-container-item v-for="(item, index) in listItemData" :key="index" :id="index">
+          <div class="banner" v-if="listInfoData.carousel_imgs"><img :src="imgBaseUrl + listInfoData.carousel_imgs['1']" alt=""></div>
           <div class="labs">
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
+            <router-link v-for="(it, ind) in listInfoData.parent" :key="ind"  :to="'/list/all/' + it.id">{{it.name}}</router-link>
           </div>
           <div class="tit">推荐课程</div>
           <div class="recLabs">
-            <a href="#/">大数据入门1</a>
-            <a href="#/">大数据入门2</a>
-            <a href="#/">大数据入门3</a>
-            <a href="#/">大数据入门4</a>
-          </div>
-        </mt-tab-container-item>
-        <mt-tab-container-item id="b">
-          <div class="banner"><img src="../assets/banner.png" alt=""></div>
-          <div class="labs">
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-          </div>
-          <div class="tit">推荐课程</div>
-          <div class="recLabs">
-            <a href="#/">大数据入门1</a>
-            <a href="#/">大数据入门2</a>
-            <a href="#/">大数据入门3</a>
-            <a href="#/">大数据入门4</a>
-          </div>
-        </mt-tab-container-item>
-        <mt-tab-container-item id="c">
-          <div class="banner"><img src="../assets/banner1.png" alt=""></div>
-          <div class="labs">
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-          </div>
-          <div class="tit">推荐课程</div>
-          <div class="recLabs">
-            <a href="#/">大数据入门1</a>
-            <a href="#/">大数据入门2</a>
-            <a href="#/">大数据入门3</a>
-            <a href="#/">大数据入门4</a>
-          </div>
-        </mt-tab-container-item>
-        <mt-tab-container-item id="d">
-          <div class="banner"><img src="../assets/banner3.png" alt=""></div>
-          <div class="labs">
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-            <a href="#">全部</a><a href="#">Linx</a>
-          </div>
-          <div class="tit">推荐课程</div>
-          <div class="recLabs">
-            <a href="#/">大数据入门1</a>
-            <a href="#/">大数据入门2</a>
-            <a href="#/">大数据入门3</a>
-            <a href="#/">大数据入门4</a>
+            <router-link v-for="(it, ind) in listInfoData.courses" :key="ind"  :to="'/detail/' + it.id">{{it.name}}</router-link>
           </div>
         </mt-tab-container-item>
       </mt-tab-container>
@@ -82,13 +24,61 @@
 </template>
 <script>
   import learingFooter from './../components/footer.vue'
+  import IndexApi from '../api/learingInd.js'
+  import cfg from './../utils/config'
+
   export default {
     name: 'learingList',
     data () {
       return {
-        searchValue: '',
-        selected: 'a',
+        imgBaseUrl:cfg.imgBaseUrl,
+        searchValue: '',    // 搜索关键词
+        selected: 0,        // 分类选项
+        listItemData: [],   // 分类列表
+        listInfoData: []    // 当前分类信息
       }
+    },
+    methods:{
+      init: function() {
+        this.getCourseItem()
+      },
+      // 分类列表
+      getCourseItem: function(obj){
+        let pam = obj ? obj : ''
+        IndexApi.listItem({parent_id: pam},(ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            this.listItemData = ret.data
+            this.selected = ret.data[0].id
+            this.getCourseInfo(this.selected)
+          }
+        })
+      },
+      // 首页搜索
+      goSeach: function() {
+        this.$router.push({path:'/search/'})
+      },
+      // 分类详情
+      getCourseInfo: function(obj){
+        let pam = obj ? obj : ''
+        IndexApi.listInfo({id: pam},(ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            this.listInfoData = ret.data
+          }
+        })
+      }
+    },
+    // 选项切换执行
+    watch: {
+      selected(curVal, oldVal) {
+        this.getCourseInfo(curVal)
+      },
+    },
+    mounted:function(){
+      this.init()
     },
     components: {
       learingFooter

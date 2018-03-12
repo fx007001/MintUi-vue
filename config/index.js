@@ -4,13 +4,27 @@
 
 const path = require('path')
 
+// const APIPath = 'http://localhost:3000/'
+const APIPath = 'http://devphp.itcast.cn/e-learning-app-api/index.php/api/mob/v1/'
+// const APIPath = 'https://easy-mock.com/mock/5a9f51ac6080a32617c735ff/MockApi'
+
+const proxyList = {
+  '/api': {
+    target: APIPath,
+    changeOrigin: true,
+    pathRewrite: {
+      '^/api': ''
+    }
+  }
+}
+
 module.exports = {
   dev: {
 
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: proxyList,
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -49,7 +63,7 @@ module.exports = {
 
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
-    assetsSubDirectory: 'static',
+    assetsSubDirectory: 'e-learning-app/static',
     assetsPublicPath: '/',
 
     /**

@@ -2,27 +2,37 @@
   <div class="classItem">
     <div class="title" v-show="title"><i class="icon-logo"></i>{{title}} <a href="#/list/all" class="labs" v-show="labs">查看全部</a></div>
     <div class="content">
-      <a href="#/detail/22">
-      <div class="item" v-for="(item, index) in dataes" :key="index">
-        <div class="iconInfo"><img src="../assets/cs1.png" alt=""></div>
+      <a v-for="(item, index) in dataes" :key="index" :href="'#/detail/'+ item.id">
+      <div class="item">
+        <div class="iconInfo"><img :src="imgBaseUrl + item.cover_img" alt=""></div>
         <div class="info">
-          <div class="tit">Think PHP 5.0 博客系统实战项目</div>
-          <div class="des">从Web安全XSS的定义开始讲起，到深入剖析XSS</div>
-          <div class="rank"><em>高级</em> <i>●</i> 1822人在学习</div>
+          <div class="tit">{{item.name}}</div>
+          <div class="des">{{item.desc}}</div>
+          <div class="rank"><em v-if="item.level == 3">高级</em><em v-else-if="item.level == 2">中级</em><em v-if="item.level == 1">初级</em><i>●</i> {{item.view_count}}人在学习</div>
         </div>
       </div></a>
     </div>
   </div>
 </template>
 <script>
+  import cfg from './../utils/config'
   export default {
     name: 'classItem',
     props: ['title', 'labs', 'dataes'],
     data () {
       return {
-        selected: 'ind'
+        selected: 'ind',
+        imgBaseUrl:cfg.imgBaseUrl
       }
-    }
+    },
+    methods:{
+      init:function(){
+
+      }
+    },
+    mounted:function(){
+      this.init()
+    },
   }
 </script>
 

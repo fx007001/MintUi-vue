@@ -1,10 +1,37 @@
+import localStore from '../utils/localStore'
+import JsonUtils from '../utils/json'
+
 let state = {
-  newNavData:{titA:'项目管理', titB:'项目列表'}
+  uid:'',
+  name: '',
+  utoken: ''
 };
 
 const mutations = {
-  updateNavData(context,newCont){
-    context.newNavData = newCont
+  save (state, user) {
+    state.user = user
+    if (user !== null) {
+      state.uid = user.uid
+      state.name = user.name
+      state.utoken = user.utoken
+      localStore.setItem('mobUser', JsonUtils.jsonToString(state.user))
+    }
+  },
+  flash (state) {
+    let tmp = localStore.getItem('mobUser', null)
+    let user = tmp === null ? null : JsonUtils.stringToJson(tmp)
+    state.user = user
+    if (user !== null) {
+      state.uid = user.uid
+      state.name = user.name
+      state.utoken = user.utoken
+    }
+  },
+  clear (state) {
+    state.uid = ''
+    state.name = ''
+    state.utoken = ''
+    localStore.removeItem('mobUser')
   }
 };
 
@@ -12,20 +39,19 @@ const mutations = {
 // 参数为事件函数
 const actions = {
   updateNav({commit}, msg){
-    commit('updateNavData', {titA:'项目管理', titB:'项目列表'})    // 提交到mutations中处理
+    commit('mobUser', {uid:'', name:''})    // 提交到mutations中处理
   }
 };
 
 // 返回改变后的数值
 const getters = {
-  getStartDataes(obj){
-    return obj.newNavData
-  }
+  uid: state => state.user.uid,
+  name: state => state.user.name,
+  utoken: state => state.user.utoken,
 };
 
 export default {
   state,
   mutations,
-  actions,
   getters
 }

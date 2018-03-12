@@ -10,34 +10,53 @@
         <span class="icon-go"></span>
         <i slot="icon" class="icon icon-order"></i>
       </mt-cell>
-      <mt-cell title="我的消息">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-mess"></i>
-      </mt-cell>
-      <mt-cell title="我的收藏">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-col"></i>
-      </mt-cell>
-      <mt-cell title="设置">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-set"></i>
-      </mt-cell>
-      <mt-cell title="退出">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-out"></i>
-      </mt-cell>
+      <!--<mt-cell title="我的消息">-->
+        <!--<span class="icon-go"></span>-->
+        <!--<i slot="icon" class="icon icon-mess"></i>-->
+      <!--</mt-cell>-->
+      <!--<mt-cell title="我的收藏">-->
+        <!--<span class="icon-go"></span>-->
+        <!--<i slot="icon" class="icon icon-col"></i>-->
+      <!--</mt-cell>-->
+      <!--<mt-cell title="设置">-->
+        <!--<span class="icon-go"></span>-->
+        <!--<i slot="icon" class="icon icon-set"></i>-->
+      <!--</mt-cell>-->
+      <span @click="logOut">
+        <mt-cell title="退出">
+            <span class="icon-go"></span>
+            <i slot="icon" class="icon icon-out"></i>
+        </mt-cell>
+      </span>
     </div>
     <!--<learingFooter></learingFooter>-->
   </div>
 </template>
 <script>
   import learingFooter from './../components/footer.vue'
+  import logApi from '../api/users'
 
   export default {
     name: 'learingMy',
     data () {
       return {
       }
+    },
+    methods:{
+      logOut: function() {
+        logApi.logOut((ret, err) => {
+          if (err) {
+            console.log('退出失败！')
+          }else{
+            this.$store.commit('clear')
+            this.$router.push('/login')
+          }
+          this.$store.commit('clear')
+          this.$router.push('/login')
+        })
+      }
+    },
+    mounted:function(){
     },
     components: {
       learingFooter

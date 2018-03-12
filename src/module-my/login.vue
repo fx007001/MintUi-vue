@@ -2,11 +2,11 @@
   <div class="login">
     <div class="head"><img src="../assets/logo.png" alt=""></div>
     <div class="formItem">
-      <mt-field label="" v-model="email" placeholder="手机号/邮箱"></mt-field>
-      <mt-field label="" placeholder="密码" type="password" v-modal="password"></mt-field>
-      <div class="subBut">登录</div>
+      <mt-field label="" v-model="username" placeholder="手机号/邮箱"></mt-field>
+      <mt-field label="" placeholder="密码" type="password" v-model="password"></mt-field>
+      <div class="subBut" @click="logSub">登录</div>
       <div class="more">
-        <router-link :to="{'path':'/login'}" class="register">注册</router-link>
+        <router-link :to="{'path':'/register'}" class="register">注册</router-link>
         <router-link :to="{'path':'/login'}" class="forgetPass">忘记密码？</router-link>
       </div>
     </div>
@@ -20,17 +20,30 @@
   </div>
 </template>
 <script>
-  import learingFooter from './../components/footer.vue'
+  import logApi from '../api/users'
   export default {
     name: 'login',
     data () {
       return {
-        email:'',
+        username:'',
         password: '',
       }
     },
+    methods:{
+      logSub: function() {
+        logApi.login({username:this.username,password:this.password},(ret, err) => {
+          if (err) {
+            console.log('用户名或密码错误！请稍后重试！')
+          }else{
+            this.$store.commit('save',ret.data)
+            this.$router.push('/')
+          }
+        })
+      }
+    },
+    mounted:function(){
+    },
     components: {
-      learingFooter
     }
   }
 </script>
@@ -108,14 +121,6 @@
           width: 40%;
         }
       }
-    }
-    input:-webkit-autofill,
-    textarea:-webkit-autofill,
-    select:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 1000px $cl10 inset;
-    }
-    input[type=text]:focus, input[type=password]:focus, textarea:focus {
-      -webkit-box-shadow: 0 0 0 1000px $cl10 inset;
     }
   }
 </style>

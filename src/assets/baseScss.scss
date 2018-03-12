@@ -22,7 +22,7 @@ $cl15:#ff7c2d;
   box-shadow: 0px 2px 2px $cl5;
   color:$cl6;
 }
-/* 自定义mint ui搜索框样式 */
+
 .mint-search{
   position: relative;
   z-index: 10;
@@ -39,5 +39,17 @@ $cl15:#ff7c2d;
       .mintui{font-size: 14px;color:$cl6;}
     }
   }
+}
+/* 自定义input输入框背景 */
+input:-webkit-autofill,
+textarea:-webkit-autofill,
+select:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px $cl10 inset;
+}
+input{
+  background: transparent;
+}
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+  -webkit-box-shadow: 0 0 0 1000px $cl10 inset;
 }
 

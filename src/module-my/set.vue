@@ -45,6 +45,16 @@
       return {
       }
     },
+    methods:{
+      init: function() {
+
+      },
+      getCourseItem: function(obj){
+
+      }
+    },
+    mounted:function(){
+    },
     components: {
       learingFooter
     }

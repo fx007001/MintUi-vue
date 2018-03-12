@@ -1,27 +1,39 @@
 <template>
   <div class="indexHeader">
-    <div class="search" ><i class="icon-search" @click="goSeach"></i> <input type="text" @blur="onblurEvent" @focus="focusEvent" :style="{width: seachWt}" v-model="searchName" placeholder="学成在线"></div>
+    <div class="search" @click="goSeach" ><i class="icon-search" ></i> <input type="text" @blur="" @focus="" :style="{width: seachWt}" v-model="searchName" placeholder="学成在线"></div>
     <mt-swipe :auto="3000">
-      <mt-swipe-item><img src="../assets/banner1.png" width="100%" alt=""></mt-swipe-item>
-      <mt-swipe-item><img src="../assets/banner2.png" width="100%" alt=""></mt-swipe-item>
-      <mt-swipe-item><img src="../assets/banner3.png" width="100%" alt=""></mt-swipe-item>
+      <mt-swipe-item v-for="(item, index) in bannerDat" :key="index"><img :src="imgBaseUrl + item.image_url" width="100%" alt=""></mt-swipe-item>
     </mt-swipe>
   </div>
 </template>
 
 <script>
+  import IndexApi from '../api/learingInd.js'
+  import cfg from './../utils/config'
+
   export default {
     name: 'indexHeader',
     data () {
       return {
+        bannerDat: [],
         searchName: '',
-        seachWt: ''
+        seachWt: '',
+        imgBaseUrl: cfg.imgBaseUrl,
       }
     },
     methods: {
+      init:function (){
+        IndexApi.banner((ret, err) => {
+          if (err) {
+            console.log('数据获取失败！')
+          }else{
+            this.bannerDat = ret.data
+          }
+        })
+      },
       // 首页搜索
       goSeach: function() {
-         console.log(this.searchName)
+        this.$router.push({path:'/search/'})
       },
       // 搜索处理
       onblurEvent: function() {
@@ -34,6 +46,9 @@
       focusEvent: function() {
           this.seachWt = '90%'
       }
+    },
+    mounted:function(){
+      this.init()
     }
   }
 </script>

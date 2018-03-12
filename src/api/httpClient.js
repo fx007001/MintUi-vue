@@ -1,10 +1,15 @@
 import Axios from 'axios'
 import kindOf from 'kind-of'
+import jsonTrans from './../utils/json'
 
-
-let APIBase = ''
+let APIBase = '/e-learning-app-api/index.php/api/mob/v1/'
 if (process.env.NODE_ENV === 'development') {
   APIBase = 'api'
+}
+
+let tonke = ''
+if(window.localStorage.mobUser){
+  tonke = jsonTrans.stringToJson(window.localStorage.mobUser).api_token
 }
 
 let requestConfig = {
@@ -12,9 +17,10 @@ let requestConfig = {
   responseType: 'json',
   baseURL: APIBase,
   headers: {
-    'token': 'XuCA3QD06y06PD9822bj196D7O8SZLGXjCgbhpwI5PsIZNHy3pigTbaEo7sJGHSC',
+    'Authorization': tonke,
     'Cache-Control': 'no-cache',
-    'content-type': 'application/json;charset=utf-8'
+    'content-type': 'application/json;charset=utf-8',
+    'X-Pagination-Per-Page': '6'
   }
 }
 
@@ -82,83 +88,84 @@ let _errMesage = (message) => {
 }
 // HTTP拦截器
 // hrequest header
-// Axios.interceptors.request.use(
-//   config => {
-//     if (store.state.user.user) {
-//       config.headers.uid = store.state.user.user.uid
-//       config.headers.utoken = store.state.user.user.utoken
-//     }
-//     return config
-//   },
-//   error => {
-//     return Promise.reject(error)
-//   })
-// // response error
-// Axios.interceptors.response.use(
-//   response => {
-//     if (process.env.NODE_ENV === 'development') {
-//       // console.log(response.data)
-//     }
-//     // 处理返回的code
-//     if (response.data !== null) {
-//       if (response.data.code !== undefined) {
-//         switch (response.data.code) {
-//           case 1000:// 没有数据
-//             response.data = []
-//             break
-//           case 401:
-//             // _errMesage(response.data.message)
-//             store.commit('user/clear')
-//             router.push('/login')
-//             break
-//           default:
-//             _errMesage(response.data.message)
-//             break
-//         }
-//         return Promise.reject(response.data)
-//       }
-//     }
-//     return response
-//   },
-//   error => {
-//     if (error.response) {
-//       switch (error.response.status) {
-//         case 400:// 请求异常
-//           break
-//         case 401:
-//           store.commit('user/clear')
-//           router.push('/login')
-//           break
-//         case 403:// 当认证成功，但是认证过的用户没有访问资源的权限
-//           break
-//         case 404:// 当GET不到数据时
-//           break
-//         case 405:// 所请求的 HTTP 方法不允许当前认证用户访问
-//           break
-//         case 410:// 表示当前请求的资源不再可用。当调用老版本 API 的时候很有用
-//           break
-//         case 415:// 如果请求中的内容类型是错误的
-//           break
-//         case 422:// 用来表示校验错误
-//           break
-//         case 429:// 由于请求频次达到上限而被拒绝访问
-//           break
-//         case 500:// 程序错误
-//           _errMesage('500 服务器程序错误')
-//           break
-//         case 502:// 错误网关
-//           _errMesage('502 错误网关')
-//           break
-//         case 503:// 服务不可用
-//           _errMesage('503 服务不可用')
-//           break
-//         case 504:// 网关超时
-//           _errMesage('504 网关超时')
-//           break
-//       }
-//     }
-//     return Promise.reject(error)
-//   })
+Axios.interceptors.request.use(
+  config => {
+    // if (store.state.user.user) {
+    //   config.headers.uid = store.state.user.user.uid
+    //   config.headers.utoken = store.state.user.user.utoken
+    // }
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  })
+// response error
+Axios.interceptors.response.use(
+  response => {
+    if (process.env.NODE_ENV === 'development') {
+      // console.log(response.data)
+    }
+    // 处理返回的code
+    if (response.data !== null) {
+      if (response.data.code !== undefined) {
+        switch (response.data.code) {
+          case 1000:// 没有数据
+            response.data = []
+            break
+          case 401:
+            // _errMesage(response.data.message)
+            // store.commit('user/clear')
+            // router.push('/login')
+            break
+          default:
+            _errMesage(response.data.message)
+            break
+        }
+        return Promise.reject(response.data)
+      }
+    }
+    return response
+  },
+  error => {
+    if (error.response) {
+      switch (error.response.status) {
+        case 400:// 请求异常
+          // return error.response.data
+          break
+        case 401:
+          // store.commit('user/clear')
+          router.push('/login')
+          break
+        case 403:// 当认证成功，但是认证过的用户没有访问资源的权限
+          break
+        case 404:// 当GET不到数据时
+          break
+        case 405:// 所请求的 HTTP 方法不允许当前认证用户访问
+          break
+        case 410:// 表示当前请求的资源不再可用。当调用老版本 API 的时候很有用
+          break
+        case 415:// 如果请求中的内容类型是错误的
+          break
+        case 422:// 用来表示校验错误
+          break
+        case 429:// 由于请求频次达到上限而被拒绝访问
+          break
+        case 500:// 程序错误
+          _errMesage('500 服务器程序错误')
+          break
+        case 502:// 错误网关
+          _errMesage('502 错误网关')
+          break
+        case 503:// 服务不可用
+          _errMesage('503 服务不可用')
+          break
+        case 504:// 网关超时
+          _errMesage('504 网关超时')
+          break
+      }
+    }
+    return Promise.reject(error)
+  })
 
 export default {
   // SELECT 从服务器取出资源（一项或多项）

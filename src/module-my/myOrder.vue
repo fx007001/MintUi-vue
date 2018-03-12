@@ -7,89 +7,108 @@
     </mt-header>
 
     <mt-navbar v-model="selected">
-      <mt-tab-item id="noPay">未支付</mt-tab-item>
-      <mt-tab-item id="finish">已完成</mt-tab-item>
+      <mt-tab-item id="1">未支付</mt-tab-item>
+      <mt-tab-item id="2">已完成</mt-tab-item>
     </mt-navbar>
     <!-- tab-container -->
-    <mt-tab-container v-model="selected">
-      <mt-tab-container-item id="noPay">
-        <div class="prompt" v-show="prompt"><i class="icon-prompt"></i>订单号24小时内有效，过期将自动关闭 <span class="icon-close" @click="promptClose"></span></div>
-        <div class="item">
-          <div class="tit">订单编号：201803020453</div>
+    <!--<mt-tab-container v-model="selected">-->
+      <!--<mt-tab-container-item id="1">-->
+    <div style="margin-top: 10px;">
+        <div class="prompt" v-show="prompt && selected == 1"><i class="icon-prompt"></i>订单号24小时内有效，过期将自动关闭 <span class="icon-close" @click="promptClose"></span></div>
+        <div class="item" v-for="(item, index) in myOrderData" :key="index">
+          <div class="tit">订单编号：{{item.sn}}</div>
           <div class="cont">
             <div class="ico"><img src="../assets/cs1.png" alt=""></div>
             <div class="info">
-              <p class="name">Think PHP 5.0 博客系统实战项目</p>
-              <p class="pic">￥299</p>
+              <p class="name">{{item.course.name}}</p>
+              <p class="pic">￥{{item.price}}</p>
             </div>
           </div>
           <div class="active">
-            <p>总价: <i class="pic">￥299</i></p>
-            <p class="act"><a href="/">去支付</a></p>
+            <p>总价: <i class="pic">￥{{item.price}}</i></p>
+            <p class="act">
+              <span v-if="item.status == 1"><router-link :to="'/pay/'+item.id">去支付</router-link></span>
+              <span v-if="item.status == 2">已完成</span>
+              <span v-if="item.status == 3">已过期</span>
+            </p>
           </div>
         </div>
-        <div class="item">
-          <div class="tit">订单编号：201803020453</div>
-          <div class="cont">
-            <div class="ico"><img src="../assets/cs2.png" alt=""></div>
-            <div class="info">
-              <p class="name">Think PHP 5.0 博客系统实战项目</p>
-              <p class="pic">￥299</p>
-            </div>
-          </div>
-          <div class="active">
-            <p>总价: <i class="pic">￥299</i></p>
-            <p class="act"><span>已过期</span></p>
-          </div>
-        </div>
-      </mt-tab-container-item>
-      <mt-tab-container-item id="finish">
-        <div class="item">
-          <div class="tit">订单编号：201803020453</div>
-          <div class="cont">
-            <div class="ico"><img src="../assets/cs1.png" alt=""></div>
-            <div class="info">
-              <p class="name">Think PHP 5.0 博客系统实战项目</p>
-              <p class="pic">￥299</p>
-            </div>
-          </div>
-          <div class="active">
-            <p>总价: <i class="pic">￥299</i></p>
-            <p class="act"><span>已完成</span></p>
-          </div>
-        </div>
-        <div class="item">
-          <div class="tit">订单编号：201803020453</div>
-          <div class="cont">
-            <div class="ico"><img src="../assets/cs2.png" alt=""></div>
-            <div class="info">
-              <p class="name">Think PHP 5.0 博客系统实战项目</p>
-              <p class="pic">￥299</p>
-            </div>
-          </div>
-          <div class="active">
-            <p>总价: <i class="pic">￥299</i></p>
-            <p class="act"><span>已完成</span></p>
-          </div>
-        </div>
-      </mt-tab-container-item>
-    </mt-tab-container>
+    </div>
+      <!--</mt-tab-container-item>-->
+      <!--<mt-tab-container-item id="2">-->
+        <!--<div class="item">-->
+          <!--<div class="tit">订单编号：201803020453</div>-->
+          <!--<div class="cont">-->
+            <!--<div class="ico"><img src="../assets/cs1.png" alt=""></div>-->
+            <!--<div class="info">-->
+              <!--<p class="name">Think PHP 5.0 博客系统实战项目</p>-->
+              <!--<p class="pic">￥299</p>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="active">-->
+            <!--<p>总价: <i class="pic">￥299</i></p>-->
+            <!--<p class="act"><span>已完成</span></p>-->
+          <!--</div>-->
+        <!--</div>-->
+        <!--<div class="item">-->
+          <!--<div class="tit">订单编号：201803020453</div>-->
+          <!--<div class="cont">-->
+            <!--<div class="ico"><img src="../assets/cs2.png" alt=""></div>-->
+            <!--<div class="info">-->
+              <!--<p class="name">Think PHP 5.0 博客系统实战项目</p>-->
+              <!--<p class="pic">￥299</p>-->
+            <!--</div>-->
+          <!--</div>-->
+          <!--<div class="active">-->
+            <!--<p>总价: <i class="pic">￥299</i></p>-->
+            <!--<p class="act"><span>已完成</span></p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</mt-tab-container-item>-->
+    <!--</mt-tab-container>-->
   </div>
 </template>
 <script>
   import learingFooter from './../components/footer.vue'
+  import Users from '../api/users.js'
+  import cfg from './../utils/config'
 
   export default {
     name: 'myOrder',
     data () {
       return {
-        selected: 'noPay',
+        selected: '1',
+        myOrderData: '',
         prompt:true
       }
     },
     methods:{
+      init: function() {
+        this.getMyCourses()
+      },
+      //提示关闭
       promptClose:function(){
         this.prompt = false;
+      },
+      //订单获取
+      getMyCourses: function(){
+        Users.myOrder({status: this.selected}, (ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            console.log(ret.data)
+            this.myOrderData = ret.data
+          }
+        })
+      }
+    },
+    mounted:function(){
+      this.init()
+    },
+    watch:{
+      selected(newVal, oldVal){
+        this.selected = newVal
+        this.getMyCourses()
       }
     },
     components: {
@@ -121,6 +140,7 @@
       padding:0 15px;
       margin-bottom: 3px;
       position: relative;
+      top:-10px;
       i{
         position: relative;
         margin-right: 5px;

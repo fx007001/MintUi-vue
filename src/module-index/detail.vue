@@ -6,63 +6,91 @@
         <mt-button icon="back"></mt-button>
       </router-link>
     </mt-header>
-    <div class="banner"><img src="../assets/banner.png" alt=""></div>
+    <div class="banner">
+      <img src="../assets/banner.png" alt="">
+      <span>{{courseInfoData.name}}</span>
+    </div>
     <div class="contentInfo">
       <!--课程描述相关信息-->
       <div class="desInfo">
         <div class="des">
-          本C语言教程从以下几个模块来贯穿主要知识点：初始C程序、数据类型、运算符、语句结构、函数和数组。每个阶段都配有练习题同时提供在线编程任务。希望通过本教程帮助C语言入门学习者迅速掌握程序逻辑并开始C语言编程。
+          {{courseInfoData.desc}}
         </div>
         <ul>
-          <li>难度：高级</li>
-          <li>时长：1h50m</li>
-          <li>人数：12512</li>
-          <li>评分：<em>9.5</em></li>
+          <li>难度：<i v-if="courseInfoData.level == 3">高级</i><i v-else-if="courseInfoData.level == 2">中级</i><i v-if="courseInfoData.level == 1">初级</i></li>
+          <li>时长：{{courseInfoData.duration}}</li>
+          <li>人数：{{courseInfoData.count_student}}</li>
+          <li>评分：<em>{{courseInfoData.score}}</em></li>
         </ul>
       </div>
       <!--讲师介绍相关信息-->
       <div class="teachInfo">
-        <div class="teach"><img src="../assets/teachIcon.png" alt=""></div>
+        <div class="teach"><img v-if="teachInfo.avatar" :src="imgBaseUrl + teachInfo.avatar" alt=""></div>
         <div class="info">
-          <p class="name">毛老师</p>
-          <p>高级前端开发工程师   10年开发经验 </p>
+          <p class="name">{{teachInfo.username}}</p>
+          <p>{{teachInfo.job}} </p>
         </div>
         <div class="goAbout"> <i class="icon-go"></i></div>
       </div>
       <!--适合人群-->
       <div class="fitPeop">
         <div class="tit">适合人群</div>
-        <div>本课程假设学生熟悉大多数入门课程所涉及的程序，但它被明确设计成不是一门特别高级的课程。学生应该熟悉变量，条件语句，数组，链表，栈，和递归（递归算法将审查和扩展）。</div>
+        <div>{{courseInfoData.for_student}}</div>
       </div>
       <!--课程大纲-->
       <div class="courseItem">
         <div class="tit">课程大纲</div>
-        <ul>第一章：初始C程序
-          <li><span>视频</span>1.1 初始C语言 <a href="#/play/21">试学</a></li>
-          <li><span>视频</span>1.2 继承 <a href="#/play/21">试学</a></li>
-          <li><span>视频</span>1.3 多态 <a href="#/play/21">试学</a></li>
-        </ul>
-        <ul>第一章：初始C程序
-          <li><span>视频</span>1.1 初始C语言 </li>
-          <li><span>视频</span>1.2 继承 </li>
-          <li><span>视频</span>1.3 多态 </li>
+        <ul v-for="(item, index) in courseItem" :key="index">{{item.name}}
+          <li v-for="(it, ind) in item.lessions" :key="ind"><span v-show="it.is_video">视频</span>{{it.name}} <router-link v-if="it.free_trial" v-show="it" :to="{'path':'/play/' + it.id}">试学</router-link></li>
         </ul>
       </div>
     </div>
-
-    <div class="payCourse">￥ 299.00<a href="#/pay/22">立即购买</a></div>
-    <div class="startLearing">开始学习</div>
+    <div class="payCourse" v-if="!courseInfoData.is_buy || courseInfoData.price == 0">￥ 299.00<router-link :to="{'path':'/pay/' + courseInfoData.id}">立即购买</router-link></div>
+    <div v-else class="startLearing"><router-link :to="{'path':'/play/' + courseInfoData.id}">开始学习</router-link></div>
   </div>
 </template>
 <script>
   import learingFooter from './../components/footer.vue'
+  import IndexApi from '../api/learingInd.js'
+  import cfg from './../utils/config'
 
   export default {
     name: 'learingIndexDetail',
     data () {
       return {
-        data: [1, 4, 3, 3, 3, 3, 3, 3]
+        imgBaseUrl:cfg.imgBaseUrl,
+        courseInfoData: '',           // 课程信息
+        teachInfo: '',              // 讲师信息
+        courseItem:''                 // 课程大纲
       }
+    },
+    methods:{
+      // 初始化数据
+      init: function() {
+        IndexApi.courses({id:this.$route.params.classId},(ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            this.courseInfoData = ret.data
+            this.teachInfo = ret.data.teacher
+            this.getCourseItem(ret.data.id)
+          }
+        })
+      },
+      // 课程大纲
+      getCourseItem: function(obj){
+        IndexApi.coursesutline({id:obj},(ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            this.courseItem = ret.data.chapters
+
+          }
+        })
+      }
+    },
+    mounted:function(){
+       this.init()
     },
     components: {
       learingFooter
@@ -77,6 +105,15 @@
   .banner{
     position: relative;
     z-index: 99;
+    color:$cl1;
+    font-size: 24px;
+    span{
+      font-weight: bold;
+      position: absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%);
+    }
   }
   .top{
     background: $cl1;
@@ -251,6 +288,12 @@
     color:$cl1;
     text-align: center;
     line-height: 50px;
+    a{
+      color:$cl1;
+      display: inline-block;
+      width: 100%;
+      height: 50px;
+    }
   }
 }
 </style>

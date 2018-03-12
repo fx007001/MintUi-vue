@@ -1,96 +1,98 @@
 <template>
-  <div class="learingMy">
-    <div class="head"><img src="../assets/banner1.png" alt="">张老师</div>
-    <div class="item">
-      <!--<li class="mint-cell-mask">个人资料</li>-->
-      <!--<li class="">我的订单</li>-->
-      <!--<li>我的消息</li>-->
-      <!--<li>我的收藏</li>-->
-      <!--<li>设置</li>-->
-      <!--<li>退出</li>-->
-      <mt-cell title="个人资料">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-my"></i>
-      </mt-cell>
-      <mt-cell title="我的订单">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-order"></i>
-      </mt-cell>
-      <mt-cell title="我的消息">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-mess"></i>
-      </mt-cell>
-      <mt-cell title="我的收藏">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-col"></i>
-      </mt-cell>
-      <mt-cell title="设置">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-set"></i>
-      </mt-cell>
-      <mt-cell title="退出">
-        <span class="icon-go"></span>
-        <i slot="icon" class="icon icon-my"></i>
-      </mt-cell>
+  <div class="register">
+    <mt-header title="注册" style="background:#26a2ff;color:#fff;">
+      <router-link to="/login" slot="left">
+        <mt-button icon="back"></mt-button>
+      </router-link>
+    </mt-header>
+    <div class="formItem">
+      <mt-field label="" v-model="phoneNum" placeholder="手机号"></mt-field>
+      <p><mt-field label="" placeholder="验证码" type="telCode" v-model="telCode"></mt-field>
+        <span class="sendCode" @click="sendPhoCode">发送验证码</span>
+      </p>
+      <mt-field label="" placeholder="请输入密码" type="password" v-model="password"></mt-field>
+      <div class="subBut" @click="registerSub">完成</div>
+      <div class="more">
+        <router-link :to="{'path':'/login'}" class="forgetPass">已有账号去登录？去登陆</router-link>
+      </div>
     </div>
-    <learingFooter></learingFooter>
   </div>
 </template>
 <script>
-  import learingFooter from './../components/footer.vue'
-
+  import logApi from '../api/users'
   export default {
-    name: 'learingMy',
+    name: 'register',
     data () {
       return {
+        phoneNum: '',
+        telCode: '',
+        mail: '',
+        password: ''
       }
     },
+    methods:{
+      registerSub: function() {
+        logApi.register({phoneNum:this.phoneNum, password:this.password},(ret, err) => {
+          if (err) {
+            alert('用户名或密码错误！请稍后重试！')
+          }else{
+            console.log(ret.data)
+          }
+        })
+      },
+      sendPhoCode: function(){
+        if(this.phoneNum === '' ){
+          return false
+        }
+        logApi.sendCode({phoneNum:this.phoneNum},(ret, err) => {
+          if (err) {
+            //alert('用户名或密码错误！请稍后重试！')
+          }else{
+            console.log(ret.headers.debug)
+          }
+        })
+      }
+    },
+    mounted:function(){
+    },
     components: {
-      learingFooter
     }
   }
 </script>
 
 <style lang="scss">
   @import "../assets/baseScss";
-  .learingMy{
-    .head{
-      background: $cl1;
-      padding:30px 20px;
-      line-height: 50px;
-      color:$cl3;
-      font-size: 20px;
-      margin-bottom: 15px;
-      img{
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        margin-right: 10px;
-        float: left;
-      }
-    }
-    .item{
-      background: $cl1;
-      padding:0 15px;
-      li {
-        line-height: 40px;
-        border-bottom:solid 1px $cl5;
-        position: relative;
-        i{
-          position: absolute;
-          right: 0px;
-        }
-      }
-      .icon{
-        position: absolute;
-        left: 0px;
-        top:15px;
-        font-size: 18px;
+  .register{
+    .formItem{
+      font-size: 18px;
+      margin: 0 30px;
+      p{position: relative}
+      .mint-cell{
+        background: transparent;
       }
       .mint-cell-wrapper{
-        position: relative;
-        padding: 0px 0px 0px 25px ;
+        background: transparent;
+        padding: 0;
+        border-bottom: solid 1px $cl14;
       }
+      .subBut{
+        background: $cl0;
+        color:$cl1;
+        text-align: center;
+        line-height: 40px;
+        margin: 20px 0;
+      }
+      .more{
+        position: fixed;
+        width: 100%;
+        left: 0px;
+        bottom: 100px;
+        text-align: center;
+        .forgetPass{
+          color:$cl9;
+        }
+      }
+      .sendCode{position: absolute;right: 0px;top:6px;display: inline-block;font-size: 14px;color:$cl0;border:solid 1px $cl0;padding: 5px;}
     }
   }
 </style>

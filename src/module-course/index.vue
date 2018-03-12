@@ -1,16 +1,16 @@
 <template>
   <div class="learingCourse">
-    <mt-search v-model="searchValue"></mt-search>
-    <div class="courseItem">
-      <div class="item" v-for=" (item, index) in data" :key="index">
-        <div class="ico"><img src="../assets/cs1.png" alt=""></div>
+    <div @click="goSeach"><mt-search v-model="searchValue"></mt-search></div>
+    <div class="courseItem" >
+      <div class="item" v-for="(item, index) in MyCoursesData" :key="index">
+        <div class="ico"><img :src="imgBaseUrl + item.cover_img" alt=""></div>
         <div class="info">
-          <p class="tit">Think PHP 5.0 博客系统实战项目</p>
+          <p class="tit">{{item.name}}</p>
           <p class="speed">
-            <mt-progress :value="30" :barHeight="10">
-              <div slot="end"> 进度30%</div>
+            <mt-progress :value="item.done_percentage" :barHeight="10">
+              <div slot="end"> 进度{{item.done_percentage}}%</div>
             </mt-progress>
-            <a href="#/"><i class="icon-play"></i>开始学习</a>
+            <router-link :to="'/play/'+item.id"><i class="icon-play"></i>开始学习</router-link>
           </p>
         </div>
       </div>
@@ -20,13 +20,38 @@
 </template>
 <script>
   import learingFooter from './../components/footer.vue'
+  import IndexApi from '../api/learingInd.js'
+  import cfg from './../utils/config'
+
   export default {
     name: 'learingCourse',
     data () {
       return {
-        data: [1, 2, 3, 4],
-        searchValue: ''
+        imgBaseUrl:cfg.imgBaseUrl,
+        searchValue: '',
+        MyCoursesData:''
       }
+    },
+    methods:{
+      init: function() {
+        this.getMyCourses()
+      },
+      // 搜索
+      goSeach: function() {
+        this.$router.push({path:'/search/'})
+      },
+      getMyCourses: function(){
+        IndexApi.myCourses((ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            this.MyCoursesData = ret.data
+          }
+        })
+      }
+    },
+    mounted:function(){
+      this.init()
     },
     components: {
       learingFooter
@@ -50,6 +75,7 @@
           flex: 2;
           position: relative;
           .tit{
+            text-align: left;
             height: 40px;
             line-height: 40px;
             overflow: hidden;

@@ -2,12 +2,6 @@
   <div class="learingMy">
     <div class="head"><img src="../assets/banner1.png" alt="">张老师</div>
     <div class="item">
-      <!--<li class="mint-cell-mask">个人资料</li>-->
-      <!--<li class="">我的订单</li>-->
-      <!--<li>我的消息</li>-->
-      <!--<li>我的收藏</li>-->
-      <!--<li>设置</li>-->
-      <!--<li>退出</li>-->
       <mt-cell title="个人资料">
         <span class="icon-go"></span>
         <i slot="icon" class="icon icon-my"></i>
@@ -44,6 +38,17 @@
     data () {
       return {
       }
+    },
+    methods:{
+      init: function() {
+
+      },
+      getCourseItem: function(obj){
+
+      }
+    },
+    mounted:function(){
+
     },
     components: {
       learingFooter

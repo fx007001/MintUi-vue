@@ -28,7 +28,7 @@ http://research.itcast.cn/laravel-edu-mob-doc/_book
 
 - API文档
 https://gitee.com/gitLixg/learingApi
-http://research.itcast.cn/e_learning-mobile-api-doc/gitbook/_book
+http://research.itcast.cn/e_learning-mobile-api-doc/_book
 
 ## 代码git
 

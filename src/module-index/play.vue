@@ -2,44 +2,74 @@
   <div class="learingIndexPlay">
     <!--<div><img src="../assets/banner.png" alt=""></div>-->
     <div class="vidPlayBox" @click="playVid">
-      <video id="courseVid" src="../assets/movie.mp4" width="100%">your browser does not support the video tag</video>
-      <i class="icon-plab-back"></i>
+      <video id="courseVid" :src="videoUrl" controls="controls" width="100%">your browser does not support the video tag</video>
+      <!--<i class="icon-plab-back"></i>-->
     </div>
     <div class="title"><span>章节</span></div>
     <!--课程大纲-->
     <div class="courseItem">
       <div class="tit">课程大纲</div>
-      <ul>第一章：初始C程序
-        <li><span>视频</span>1.1 初始C语言 <a href="#">试学</a></li>
-        <li><span>视频</span>1.2 继承 <a href="#">试学</a></li>
-        <li><span>视频</span>1.3 多态 <a href="#">试学</a></li>
-      </ul>
-      <ul>第一章：初始C程序
-        <li><span>视频</span>1.1 初始C语言 </li>
-        <li><span>视频</span>1.2 继承 </li>
-        <li><span>视频</span>1.3 多态 </li>
+      <ul v-for="(item, index) in courseItem" :key="index">{{item.name}}
+        <li v-for="(it, ind) in item.lessions" :key="ind" :class="{act: it.id == select}" @click="checkPlayVid(it.id)"><span v-show="it.is_video">视频</span>{{it.name}} <a v-if="it.free_trial" v-show="it" >试学</a></li>
       </ul>
     </div>
   </div>
 </template>
 <script>
   import learingFooter from './../components/footer.vue'
+  import IndexApi from '../api/learingInd.js'
+  import cfg from './../utils/config'
 
   export default {
     name: 'learingIndexPlay',
     data () {
       return {
-        data: [1, 4, 3, 3, 3, 3, 3, 3]
+        select: 1,       // 选择要播放的视频
+        videoUrl: '../assets/movie.mp4',    // 视频连接
+        courseItem: '',  // 课程大纲
+        imgBaseUrl: cfg.imgBaseUrl
       }
     },
     methods:{
-      playVid:function(){
+      init: function(){
+        this.getCourseItem(this.$route.params.classId)
+      },
+      // 课程大纲
+      getCourseItem: function(obj){
+        IndexApi.coursesutline({id:obj},(ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            this.courseItem = ret.data.chapters
+            this.checkPlayVid(obj)
+          }
+        })
+      },
+      // 选择课程
+      checkPlayVid: function(obj){
+        let _this = this
+        this.select = obj
+        this.courseItem.map(function(n, i){
+          n.lessions.map(function(h, j){
+            if (h.chapter_id == obj){
+              document.getElementById("courseVid").src = _this.imgBaseUrl + h.video_address;
+              console.log(234)
+              return
+            }
+          })
+        })
+      },
+      // 视频播放
+      playVid: function(){
         let myVideo = document.getElementById('courseVid')
         if (myVideo.paused)
           myVideo.play();
         else
           myVideo.pause();
       }
+    },
+    mounted: function(){
+      this.init()
     },
     components: {
       learingFooter
@@ -89,6 +119,9 @@
       .tit{
         font-size: 14px;
         color: $cl3;
+      }
+      .act{
+        color:$cl0;
       }
       ul{
         color:$cl3;

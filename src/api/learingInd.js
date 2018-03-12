@@ -1,10 +1,10 @@
 import HttpClient from './httpClient'
 
 export default {
-  // 项目列表
-  list: (callback) => {
+  // 首页 banner图
+  banner: (callback) => {
     HttpClient.get(
-      `/courses`,
+      `/system/banner`,
       {
       },
       (ret, err) => {
@@ -12,59 +12,104 @@ export default {
       }
     )
   },
-  // 项目日志列表接口
-  logList: (parameters, callback) => {
+  // 课程大纲
+  coursesutline: (parameters, callback) => {
     HttpClient.get(
-      `/courses/${parameters.id}/logs`,
-      {
-      },
+      `/courses/outline/` + parameters.id,
+      parameters,
       (ret, err) => {
         callback(ret, err)
       }
     )
   },
-  // 项目添加接口
-  add: (parameters, callback) => {
-    HttpClient.post(
-      `/courses/${parameters.searchName}`,
-      {
-      },
-      (ret, err) => {
-        callback(ret, err)
-      }
-    )
-  },
-  // 项目修改接口
-  update: (parameters, callback) => {
-    HttpClient.put(
-      `/courses/${parameters.id}`,
-      {
-      },
-      (ret, err) => {
-        callback(ret, err)
-      }
-    )
-  },
-  // 项目删除接口
-  del: (parameters, callback) => {
-    HttpClient.delete(
-      `/courses/${parameters.id}`,
-      {
-      },
-      (ret, err) => {
-        callback(ret, err)
-      }
-    )
-  },
-  // 项目详情接口
-  detail: (parameters, callback) => {
+  // 讲师信息
+  teachersInfo: (parameters, callback) => {
     HttpClient.get(
-      `/courses/${parameters.id}`,
-      {
-      },
+      `/teachers/` + parameters.id,
+      parameters,
       (ret, err) => {
         callback(ret, err)
       }
     )
-  }
+  },
+  // 课程详情
+  courses: (parameters, callback) => {
+    HttpClient.get(
+      `/courses/` + parameters.id,
+      parameters,
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
+  // 课程购买接口
+  payCourses: (parameters, callback) => {
+    HttpClient.get(
+      `/courses/` + parameters.id,
+      parameters,
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
+  // 课程列表
+  coursesItem: (parameters, callback) => {
+    HttpClient.get(
+      `/courses/`,
+      parameters,
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
+  // 我的课程 - 课程接口
+  myCourses: ( callback) => {
+    HttpClient.get(
+      `/users/mylearing`,
+      {},
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
+  // 分类列表
+  listItem: (parameters, callback) => {
+    HttpClient.get(
+      `/categories/` + parameters.parent_id,
+      parameters,
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
+  // 分类详情
+  listInfo: (parameters, callback) => {
+    HttpClient.get(
+      `/categories/`+ parameters.id ,
+      parameters,
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
+  // 搜索-热搜词
+  seachItem: (callback) => {
+    HttpClient.get(
+      `/hotsearch/`,
+      {},
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
+  // 搜索接口
+  searchResults: (parameters, callback) => {
+    HttpClient.get(
+      `/search/`+ parameters.keyword ,
+      parameters,
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
 }
