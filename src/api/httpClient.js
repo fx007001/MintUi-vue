@@ -20,7 +20,8 @@ let requestConfig = {
     'Authorization': tonke,
     'Cache-Control': 'no-cache',
     'content-type': 'application/json;charset=utf-8',
-    'X-Pagination-Per-Page': '6'
+    'X-Pagination-Current-Page': '1',
+    'X-Pagination-Per-Page': '10'
   }
 }
 
@@ -33,13 +34,20 @@ function checkZero(val) {
 }
 // 转成驼峰格式
 function transformStrHump(str) {
-  let re = /_(\w)/g
-  return str.replace(re, function ($0, $1) {
-    return $1.toUpperCase()
-  })
+  // let re = /_(\w)/g
+  // return str.replace(re, function ($0, $1) {
+  //   return $1.toUpperCase()
+  // })
+  return str
 }
 // 格式化所有参数
 function formatHump(jsonData) {
+  if(jsonData.page){
+    requestConfig.headers['X-Pagination-Per-Page'] = jsonData.page
+  }
+  if (jsonData.currentPage) {
+    requestConfig.headers['X-Pagination-Current-Page'] = jsonData.currentPage
+  }
   let newList = {}
   if (kindOf(jsonData) === 'object') {
     newList = {}

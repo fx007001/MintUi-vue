@@ -111,6 +111,10 @@ router.beforeEach((to, from, next) => {
     user = tmp === null ? null : JsonUtils.stringToJson(tmp)
     store.commit('save', user)
   }
+  if (to.path === '/register'){
+    next()
+    return
+  }
   if (security.chkLogin(user, to.path)) {
     next()
   } else {

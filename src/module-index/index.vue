@@ -70,10 +70,14 @@
         this.getCourseItem()
       },
       getCourseItem: function(obj){
-        //httpCt.requestConfig['X-Pagination-Per-Page'] = obj ? 3 : ''
-        this.param.rcom = obj ? true : ''
-        let param = this.param
-        IndexApi.coursesItem(param,(ret, err) => {
+        if(obj){
+          this.param.rcom = true
+          this.param.page = 3
+        }else{
+          this.param.rcom = ''
+          this.param.page = 10
+        }
+        IndexApi.coursesItem(this.param,(ret, err) => {
           if (err) {
             console.log(err)
           }else{

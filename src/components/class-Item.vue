@@ -1,38 +1,66 @@
 <template>
   <div class="classItem">
     <div class="title" v-show="title"><i class="icon-logo"></i>{{title}} <a href="#/list/all" class="labs" v-show="labs">查看全部</a></div>
-    <div class="content">
-      <a v-for="(item, index) in dataes" :key="index" :href="'#/detail/'+ item.id">
-      <div class="item">
-        <div class="iconInfo"><img :src="imgBaseUrl + item.cover_img" alt=""></div>
-        <div class="info">
-          <div class="tit">{{item.name}}</div>
-          <div class="des">{{item.desc}}</div>
-          <div class="rank"><em v-if="item.level == 3">高级</em><em v-else-if="item.level == 2">中级</em><em v-if="item.level == 1">初级</em><i>●</i> {{item.view_count}}人在学习</div>
+    <div class="content"  >
+      <div v-if="isLoadMores"  v-infinite-scroll="loadMore" infinite-scroll-disabled="loading" infinite-scroll-distance="20">
+        <a v-for="(item, index) in dataes" :key="item.id" :href="'#/detail/'+ item.id">
+        <div class="item">
+          <div class="iconInfo"><img :src="imgBaseUrl + item.cover_img" alt=""></div>
+          <div class="info">
+            <div class="tit">{{item.name}}</div>
+            <div class="des">{{item.desc}}</div>
+            <div class="rank"><em v-if="item.level == 3">高级</em><em v-else-if="item.level == 2">中级</em><em v-if="item.level == 1">初级</em><i>●</i> {{item.view_count}}人在学习</div>
+          </div>
         </div>
-      </div></a>
+        </a>
+        <div class="loading" v-if="loading"><mt-spinner type="triple-bounce"></mt-spinner></div>
+        <div class="loadNone" v-show="loadNoDat"><span>- 没有了 -</span></div>
+      </div>
+      <div v-else>
+        <a v-for="(item, index) in dataes" :key="index" :href="'#/detail/'+ item.id">
+          <div class="item">
+            <div class="iconInfo"><img :src="imgBaseUrl + item.cover_img" alt=""></div>
+            <div class="info">
+              <div class="tit">{{item.name}}</div>
+              <div class="des">{{item.desc}}</div>
+              <div class="rank"><em v-if="item.level == 3">高级</em><em v-else-if="item.level == 2">中级</em><em v-if="item.level == 1">初级</em><i>●</i> {{item.view_count}}人在学习</div>
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import cfg from './../utils/config'
+
   export default {
     name: 'classItem',
-    props: ['title', 'labs', 'dataes'],
+    props: ['title', 'labs', 'dataes', 'isLoadMores', 'loading'],
     data () {
       return {
         selected: 'ind',
-        imgBaseUrl:cfg.imgBaseUrl
+        imgBaseUrl:cfg.imgBaseUrl,
+        loadNoDat:false,
+        msg:0
       }
     },
     methods:{
-      init:function(){
-
+      loadMore() {
+        this.msg ++
+        if(this.msg == 1 ){ // 因为是公用的 组件  所以去掉 首次加载  统一使用init 默认载入
+          return
+        }
+        this.$emit('getloadMore', this.msg)
       }
     },
-    mounted:function(){
-      this.init()
-    },
+    watch:{
+      dataes(val,oldval){
+        if(val.length == oldval.length ){
+          this.loadNoDat = true
+        }
+      }
+    }
   }
 </script>
 
@@ -61,6 +89,12 @@
             em{color:$cl15;}
           }
         }
+      }
+      .loading{
+        text-align: center;
+      }
+      .loadNone{
+        font-size: 12px;color:#999;text-align: center;
       }
     }
   }
