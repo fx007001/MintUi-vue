@@ -243,9 +243,9 @@
         padding-left: 20px;
        span{
          font-size: 10px;
-         padding:0px 2px;
+         padding:2px 4px 0px 4px;
          margin-right: 3px;
-         border:solid 1px $cl6
+         border:solid 1px $cl9
        }
         a{
           position: absolute;

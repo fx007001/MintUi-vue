@@ -2,8 +2,8 @@
   <div class="learingIndexPlay">
     <!--<div><img src="../assets/banner.png" alt=""></div>-->
     <div class="vidPlayBox" @click="playVid">
-      <video id="courseVid" :src="videoUrl" controls="controls" width="100%">your browser does not support the video tag</video>
-      <!--<i class="icon-plab-back"></i>-->
+      <video id="courseVid" :src="videoUrl" controls="controls" width="100%"  x-webkit-airplay=”true” playsinline webkit-playsinline=”true”>your browser does not support the video tag</video>
+      <i v-if="backSub" @click.stop="goBack()" class="icon-plab-back"></i>
     </div>
     <div class="title"><span>章节</span></div>
     <!--课程大纲-->
@@ -29,7 +29,8 @@
         videoUrl: '../assets/movie.mp4',    // 视频连接
         courseItem: '',  // 课程大纲
         imgBaseUrl: cfg.imgBaseUrl,
-        isBuy: 0    // 是否购买课程
+        isBuy: 0,    // 是否购买课程
+        backSub:true
       }
     },
     methods:{
@@ -85,10 +86,17 @@
       // 视频播放
       playVid: function(){
         let myVideo = document.getElementById('courseVid')
-        if (myVideo.paused)
+        if (myVideo.paused){
           myVideo.play();
-        else
+          this.backSub = false
+        }else{
           myVideo.pause();
+          this.backSub = true
+        }
+      },
+      //
+      goBack: function(){
+        this.$router.go(-1)
       }
     },
     mounted: function(){
