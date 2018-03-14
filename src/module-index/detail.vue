@@ -141,7 +141,7 @@
   }
   .contentInfo{
     padding:10px;
-    margin-bottom: 10px;
+    margin-bottom: 60px;
     .desInfo{
       background: $cl1;
       font-size: 12px;
@@ -273,6 +273,10 @@
     }
   }
   .payCourse{
+    position: fixed;
+    bottom:0px;
+    left:0px;
+    width: 100%;
     text-align: left;
     background: $cl1;
     padding-left: 30px;
@@ -294,6 +298,10 @@
     color:$cl1;
     text-align: center;
     line-height: 50px;
+    position: fixed;
+    bottom:0px;
+    left:0px;
+    width: 100%;
     a{
       color:$cl1;
       display: inline-block;
