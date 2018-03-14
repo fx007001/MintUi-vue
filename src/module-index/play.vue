@@ -153,6 +153,9 @@
       }
       .act{
         color:$cl0;
+        span{
+          border-color: $cl0;
+        }
       }
       ul{
         color:$cl3;
