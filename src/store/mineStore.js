@@ -11,9 +11,9 @@ const mutations = {
   save (state, user) {
     state.user = user
     if (user !== null) {
-      state.uid = user.uid
-      state.name = user.name
-      state.utoken = user.utoken
+      state.uid = user.id
+      state.name = user.username
+      state.utoken = user.api_token
       localStore.setItem('mobUser', JsonUtils.jsonToString(state.user))
     }
   },
@@ -22,9 +22,9 @@ const mutations = {
     let user = tmp === null ? null : JsonUtils.stringToJson(tmp)
     state.user = user
     if (user !== null) {
-      state.uid = user.uid
-      state.name = user.name
-      state.utoken = user.utoken
+      state.uid = user.id
+      state.name = user.username
+      state.utoken = user.api_token
     }
   },
   clear (state) {
@@ -45,9 +45,9 @@ const actions = {
 
 // 返回改变后的数值
 const getters = {
-  uid: state => state.user.uid,
-  name: state => state.user.name,
-  utoken: state => state.user.utoken,
+  uid: state => state.uid,
+  name: state => state.name,
+  utoken: state => state.utoken,
 };
 
 export default {

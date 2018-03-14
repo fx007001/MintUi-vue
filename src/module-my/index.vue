@@ -29,11 +29,10 @@
         </mt-cell>
       </span>
     </div>
-    <!--<learingFooter></learingFooter>-->
+
   </div>
 </template>
 <script>
-  import learingFooter from './../components/footer.vue'
   import logApi from '../api/users'
 
   export default {
@@ -57,9 +56,6 @@
       }
     },
     mounted:function(){
-    },
-    components: {
-      learingFooter
     }
   }
 </script>

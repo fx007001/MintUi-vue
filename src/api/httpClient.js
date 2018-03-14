@@ -1,15 +1,12 @@
 import Axios from 'axios'
 import kindOf from 'kind-of'
 import jsonTrans from './../utils/json'
+import store from './../store/index'
+import router from './../router/index'
 
 let APIBase = '/e-learning-app-api/index.php/api/mob/v1/'
 if (process.env.NODE_ENV === 'development') {
   APIBase = 'api'
-}
-
-let tonke = ''
-if(window.localStorage.mobUser){
-  tonke = jsonTrans.stringToJson(window.localStorage.mobUser).api_token
 }
 
 let requestConfig = {
@@ -17,7 +14,7 @@ let requestConfig = {
   responseType: 'json',
   baseURL: APIBase,
   headers: {
-    'Authorization': tonke,
+    'Authorization': '',
     'Cache-Control': 'no-cache',
     'content-type': 'application/json;charset=utf-8',
     'X-Pagination-Current-Page': '1',
@@ -98,10 +95,10 @@ let _errMesage = (message) => {
 // hrequest header
 Axios.interceptors.request.use(
   config => {
-    // if (store.state.user.user) {
-    //   config.headers.uid = store.state.user.user.uid
-    //   config.headers.utoken = store.state.user.user.utoken
-    // }
+    if (store.state.mineStore.user) {
+      config.headers.uid = store.state.mineStore.user.id
+      config.headers.Authorization = store.state.mineStore.user['api_token']
+    }
     return config
   },
   error => {
@@ -141,7 +138,7 @@ Axios.interceptors.response.use(
           // return error.response.data
           break
         case 401:
-          // store.commit('user/clear')
+          store.commit('clear')
           router.push('/login')
           break
         case 403:// 当认证成功，但是认证过的用户没有访问资源的权限
