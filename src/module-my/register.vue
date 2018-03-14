@@ -44,7 +44,7 @@
         if(this.phoneNum === '' ){
           return false
         }
-        logApi.sendCode({phoneNum:this.phoneNum},(ret, err) => {
+        logApi.sendCode({mobile:this.phoneNum},(ret, err) => {
           if (err) {
             //alert('用户名或密码错误！请稍后重试！')
           }else{

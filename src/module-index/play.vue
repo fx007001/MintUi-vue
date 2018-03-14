@@ -2,8 +2,8 @@
   <div class="learingIndexPlay">
     <!--<div><img src="../assets/banner.png" alt=""></div>-->
     <div class="vidPlayBox" @click="playVid">
-      <video id="courseVid" :src="videoUrl" controls="controls" width="100%"  x-webkit-airplay=”true” playsinline webkit-playsinline=”true”>your browser does not support the video tag</video>
-      <i v-if="backSub" @click.stop="goBack()" class="icon-plab-back"></i>
+      <video id="courseVid" :src="videoUrl" controls="" width="100%"  x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto">your browser does not support the video tag</video>
+      <!--<i v-if="backSub" @click.stop="goBack()" class="icon-plab-back"></i>-->
     </div>
     <div class="title"><span>章节</span></div>
     <!--课程大纲-->
