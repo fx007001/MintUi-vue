@@ -7,13 +7,13 @@
     </mt-header>
     <div class="formItem">
       <mt-field label="" v-model="phoneNum" placeholder="手机号"></mt-field>
-      <p><mt-field label="" placeholder="验证码" type="telCode" v-model="telCode"></mt-field>
-        <span class="sendCode" @click="sendPhoCode">发送验证码</span>
+      <p><mt-field label="" placeholder="验证码" type="telCode" readonly v-model="telCode"></mt-field>
+        <span class="sendCode" @click="sendPhoCode" >发送验证码</span>
       </p>
       <mt-field label="" placeholder="请输入密码" type="password" v-model="password"></mt-field>
       <div class="subBut" @click="registerSub">完成</div>
       <div class="more">
-        <router-link :to="{'path':'/login'}" class="forgetPass">已有账号去登录？去登陆</router-link>
+        <router-link :to="{'path':'/login'}" class="forgetPass">已有账号去登录？去 <i>登陆</i></router-link>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
     data () {
       return {
         phoneNum: '',
-        telCode: '',
+        telCode: '111111',
         mail: '',
         password: ''
       }
@@ -83,11 +83,14 @@
         margin: 20px 0;
       }
       .more{
-        position: fixed;
+        position: relative;
         width: 100%;
         left: 0px;
-        bottom: 100px;
+        top: 40px;
         text-align: center;
+        i{
+          color: $cl0;
+        }
         .forgetPass{
           color:$cl9;
         }

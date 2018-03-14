@@ -10,7 +10,7 @@
     <div class="courseItem">
       <div class="tit">课程大纲</div>
       <ul v-for="(item, index) in courseItem" :key="index">{{item.name}}
-        <li v-for="(it, ind) in item.lessions" :key="ind" :class="{act: it.id == select}" @click="checkPlayVid(it.id)"><span v-show="it.is_video">视频</span>{{it.name}} <a v-if="it.free_trial" v-show="it" >试学</a></li>
+        <li v-for="(it, ind) in item.lessions" :key="ind" :class="{act: it.id == select}" @click="checkPlayVid(it.id, it.free_trial)"><span v-show="it.is_video">视频</span>{{it.name}} <a v-if="it.free_trial" v-show="it" >试学</a></li>
       </ul>
     </div>
   </div>
@@ -19,6 +19,7 @@
   import learingFooter from './../components/footer.vue'
   import IndexApi from '../api/learingInd.js'
   import cfg from './../utils/config'
+  import { MessageBox } from 'mint-ui';
 
   export default {
     name: 'learingIndexPlay',
@@ -27,7 +28,8 @@
         select: 1,       // 选择要播放的视频
         videoUrl: '../assets/movie.mp4',    // 视频连接
         courseItem: '',  // 课程大纲
-        imgBaseUrl: cfg.imgBaseUrl
+        imgBaseUrl: cfg.imgBaseUrl,
+        isBuy: 0    // 是否购买课程
       }
     },
     methods:{
@@ -36,28 +38,49 @@
       },
       // 课程大纲
       getCourseItem: function(obj){
+        // 从课程详情获取是否购买信息
+        IndexApi.courses({id:obj},(ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+            this.isBuy = ret.data.is_buy
+          }
+        })
+        // 获取课程大纲
         IndexApi.coursesutline({id:obj},(ret, err) => {
           if (err) {
             console.log(err)
           }else{
             this.courseItem = ret.data.chapters
-            this.checkPlayVid(obj)
+            this.checkPlayVid(obj, true)
           }
         })
       },
-      // 选择课程
-      checkPlayVid: function(obj){
+      // 选择播放课程
+      checkPlayVid: function(obj, play){
         let _this = this
         this.select = obj
-        this.courseItem.map(function(n, i){
-          n.lessions.map(function(h, j){
-            if (h.chapter_id == obj){
-              document.getElementById("courseVid").src = _this.imgBaseUrl + h.video_address;
-              console.log(234)
-              return
-            }
+        if(this.isBuy == 1 || play){
+          this.courseItem.map(function(n, i){
+            n.lessions.map(function(h, j){
+              if (h.chapter_id == obj){
+                document.getElementById("courseVid").src = _this.imgBaseUrl + h.video_address;
+                return
+              }
+            })
           })
-        })
+        }else{
+          // 弹框 去支付
+          MessageBox({
+            title: '您还没有购买本课程',
+            message: '前往购买本课程？',
+            showCancelButton: true,
+          }).then(action => {
+            if(action == 'confirm'){
+              _this.$router.push('/pay/'+obj)
+            }
+          });
+        }
       },
       // 视频播放
       playVid: function(){

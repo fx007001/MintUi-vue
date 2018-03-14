@@ -26,8 +26,27 @@ const router = new Router({
     {
       path: '/',                   // 首页
       name: 'learingIndex',
-      component: learingIndex,
-      children: []
+      component: learingIndex
+    },
+    {
+      path: '/index',                   // 首页
+      name: 'learingIndex1',
+      component: learingIndex
+    },
+    {
+      path: '/course',                 // 课程 （我购买观看过的课程）
+      name: 'courseIndex',
+      component: learingIndex
+    },
+    {
+      path: '/list',                   // 分类
+      name: 'listIndex',
+      component: learingIndex
+    },
+    {
+      path: '/my',                      // 我的
+      name: 'myIndex',
+      component: learingIndex
     },
     {
       path: '/list/all',            // 列表页
@@ -55,16 +74,6 @@ const router = new Router({
       component: learingIndexPay
     },
     {
-      path: '/list',                   // 分类
-      name: 'listIndex',
-      component: listIndex
-    },
-    {
-      path: '/course',                 // 课程 （我购买观看过的课程）
-      name: 'courseIndex',
-      component: courseIndex
-    },
-    {
       path: '/search/:searchName',      // 搜索
       name: 'courseSearch',
       component: courseSearch
@@ -73,12 +82,6 @@ const router = new Router({
       path: '/search/',                 // 搜索-未输入搜索词
       name: 'courseSearch2',
       component: courseSearch
-    },
-    {
-      path: '/my',                      // 我的首页
-      name: 'myIndex',
-      component: myIndex,
-      children: []
     },
     {
       path: '/personalData',       // 个人资料

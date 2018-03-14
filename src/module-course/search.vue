@@ -11,8 +11,8 @@
       <div class="searchResult" v-if="searchResults != ''">
         <div class="title">搜索结果</div>
         <div class="searchResultCont">
-          <span v-if="seachResultData.length == 0" style="color:#f00;line-height: 50px;">搜索结果为空！</span>
-          <ClassItem :dataes="seachResultData"></ClassItem>
+          <!--<span v-if="seachResultData.length == 0" style="color:#f00;line-height: 50px;">搜索结果为空！</span>-->
+          <ClassItem :dataes="seachResultData" :isLoadMores="true" :loading="loading" @getloadMore="loadMore"></ClassItem>
         </div>
       </div>
     </div>
@@ -33,14 +33,17 @@
         searchValue: '',
         searchResults: '',
         hotSearchItemData: '',
-        seachResultData: []
+        seachResultData: [],
+        subParams: {},
+        loading:false,
+        noData:false
       }
     },
     methods:{
       init: function() {
         if (this.$route.params.searchName){
-          this.searchValue = this.$route.params.searchName
-          this.searchHotCk(this.searchValue)
+          this.subParams.searchValue = this.$route.params.searchName
+          this.searchHotCk()
         } else if (!this.searchResults) {
             this.getSearchItem()
         }
@@ -59,11 +62,35 @@
       searchHotCk: function(obj){
         this.searchValue = obj
         this.searchResults = obj
-        IndexApi.searchResults({keyword:this.searchValue},(ret, err) => {
+        this.subParams.currentPage = 1
+        this.subParams.keyword = this.searchValue
+        IndexApi.searchResults(this.subParams, (ret, err) => {
           if (err) {
             console.log(err)
           }else{
             this.seachResultData = ret.data
+          }
+        })
+      },
+      //加载更多
+      loadMore:function(){
+        if(this.noData){
+          return false
+        }
+        this.loading = true
+        this.subParams.currentPage++
+        IndexApi.searchResults(this.subParams, (ret, err) => {
+          if (err) {
+            console.log('获取数据失败！')
+          }else{
+            if(ret.data.length == 0){
+              this.noData = true
+              this.loading = false
+              return false
+            }else{
+              this.loading = false
+              this.seachResultData = this.seachResultData.concat(ret.data)
+            }
           }
         })
       }

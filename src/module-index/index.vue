@@ -64,6 +64,10 @@
     },
     methods:{
       init: function() {
+        let sel = this.$route.path
+        if (sel.slice(1)){
+          this.selected = sel.slice(1)
+        }
         // 精品推荐
         this.getCourseItem('rcom')
         // 全部分类
@@ -88,6 +92,11 @@
             }
           }
         })
+      }
+    },
+    watch:{
+      selected(val, oldVal){
+        this.$router.push(val)
       }
     },
     mounted:function(){

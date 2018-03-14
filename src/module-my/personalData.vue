@@ -1,7 +1,7 @@
 <template>
   <div class="personalData">
     <mt-header title="个人资料">
-      <router-link to="/" slot="left">
+      <router-link to="/my" slot="left">
         <mt-button icon="back"></mt-button>
       </router-link>
     </mt-header>

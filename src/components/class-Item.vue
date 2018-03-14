@@ -14,7 +14,7 @@
         </div>
         </a>
         <div class="loading" v-if="loading"><mt-spinner type="triple-bounce"></mt-spinner></div>
-        <div class="loadNone" v-show="loadNoDat"><span>- 没有了 -</span></div>
+        <div class="loadNone" v-show="loadNoDat"><span>- 没有数据 -</span></div>
       </div>
       <div v-else>
         <a v-for="(item, index) in dataes" :key="index" :href="'#/detail/'+ item.id">

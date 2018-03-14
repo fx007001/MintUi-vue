@@ -91,9 +91,10 @@
     }
     .otherLonin{
       text-align: center;
-      position: fixed;
+      position: relative;
       bottom: 0;
       width: 84%;
+      top:20px;
       left: 8%;
       margin: 20px 0;
       .title{

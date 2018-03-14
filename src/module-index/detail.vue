@@ -1,11 +1,11 @@
 <template>
   <div class="learingIndexDetail">
-    <!--<div class="top"><span class="icon-back">  </span> 数据分析 <span class="icon-search"></span></div>-->
-    <mt-header title="数据分析">
-      <router-link to="/" slot="left">
-        <mt-button icon="back"></mt-button>
-      </router-link>
-    </mt-header>
+    <div class="top"><span class="icon-back" @click="goBack()">  </span> 数据分析  <!-- <span class="icon-search"></span>--></div>
+    <!--<mt-header title="数据分析">-->
+      <!--<router-link :to="{ go: '-1'}" slot="left">-->
+        <!--<mt-button icon="back"></mt-button>-->
+      <!--</router-link>-->
+    <!--</mt-header>-->
     <div class="banner">
       <img src="../assets/banner.png" alt="">
       <span>{{courseInfoData.name}}</span>
@@ -53,15 +53,17 @@
   import learingFooter from './../components/footer.vue'
   import IndexApi from '../api/learingInd.js'
   import cfg from './../utils/config'
+  import Base from '../api/base'
 
   export default {
     name: 'learingIndexDetail',
+    mixins: [Base],
     data () {
       return {
         imgBaseUrl:cfg.imgBaseUrl,
         courseInfoData: '',           // 课程信息
-        teachInfo: '',              // 讲师信息
-        courseItem:''                 // 课程大纲
+        teachInfo: '',                // 讲师信息
+        courseItem: ''                // 课程大纲
       }
     },
     methods:{
@@ -87,6 +89,10 @@
 
           }
         })
+      },
+      //返回上一页
+      goBack: function() {
+        this.$router.go(-1)
       }
     },
     mounted:function(){
@@ -120,12 +126,12 @@
     position: relative;
     line-height: 40px;
     color:$cl7;
-    font-size: 16;
+    font-size: 14px;
     span:before{font-size: 15px;}
     span:nth-child(1){
       position: absolute;
       top:10px;
-      left:15px;
+      left:10px;
     }
     span:nth-child(2){
       position: absolute;

@@ -34,8 +34,8 @@
         typeTitle: '全部分类',
         rankTitle: '全部等级',
         actions:[],
-        sheetVisible:'',
         subParams: {},
+        sheetVisible:'',
         loading:false,
         noData:false
       }
@@ -43,6 +43,15 @@
     methods:{
       // 初始化数据
       init: function () {
+        if (this.$route.params.id){
+          IndexApi.listItem({parent_id: this.$route.params.id},(ret, err) => {
+            if (err) {
+              console.log(err)
+            }else{
+              this.selectItem(ret.data.name, ret.data.id)
+            }
+          })
+        }
         this.getCoursesItem()
       },
       //课程列表数据获取
@@ -75,7 +84,7 @@
       },
       // 选择分类
       selectItem:function (obj, id) {
-        if(this.sheetVisible == 'type'){
+        if(this.sheetVisible == 'type' || this.sheetVisible == ''){
           this.typeTitle =  obj
           this.subParams.category_id = id
         }else{
