@@ -12,6 +12,10 @@ npm # 开发说明
 
 vue2 + vue-router + vuex + webpack + mintUi + axios + sass 
 
+## 在线预览
+
+- 地址：http://devphp.itcast.cn/e-learning-app/index.html
+
 ## git版本控制
 
 git clone https://gitee.com/gitLixg/e-learning-mob-vue.git
