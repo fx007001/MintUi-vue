@@ -6,8 +6,8 @@
       </router-link>
     </mt-header>
     <div class="formItem">
-      <mt-field label="" v-model="phoneNum" placeholder="手机号"></mt-field>
-      <p><mt-field label="" placeholder="验证码" type="telCode" readonly v-model="telCode"></mt-field>
+      <mt-field label=""  v-model="phoneNum" placeholder="手机号"></mt-field>
+      <p><mt-field label="" placeholder="验证码" type="telCode" v-model="telCode"></mt-field>
         <span class="sendCode" @click="sendPhoCode" >发送验证码</span>
       </p>
       <mt-field label="" placeholder="请输入密码" type="password" v-model="password"></mt-field>
@@ -25,18 +25,18 @@
     data () {
       return {
         phoneNum: '',
-        telCode: '111111',
+        telCode: '',
         mail: '',
         password: ''
       }
     },
     methods:{
       registerSub: function() {
-        logApi.register({phoneNum:this.phoneNum, password:this.password},(ret, err) => {
+        logApi.register({mobile:this.phoneNum, password:this.password,sms_code:this.telCode},(ret, err) => {
           if (err) {
-            alert('用户名或密码错误！请稍后重试！')
+            alert('注册失败！请稍后重试！')
           }else{
-            console.log(ret.data)
+            this.$router.push('/login')
           }
         })
       },
@@ -48,7 +48,7 @@
           if (err) {
             //alert('用户名或密码错误！请稍后重试！')
           }else{
-            console.log(ret.headers.debug)
+            this.telCode = ret.headers.debug
           }
         })
       }
