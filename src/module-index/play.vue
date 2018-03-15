@@ -1,6 +1,5 @@
 <template>
   <div class="learingIndexPlay">
-    <!--<div><img src="../assets/banner.png" alt=""></div>-->
     <div class="vidPlayBox" @click="playVid">
       <video id="courseVid" :src="videoUrl" controls="" width="100%"  x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto">your browser does not support the video tag</video>
       <!--<i v-if="backSub" @click.stop="goBack()" class="icon-plab-back"></i>-->
@@ -26,7 +25,7 @@
     data () {
       return {
         select: 1,       // 选择要播放的视频
-        videoUrl: '../assets/movie.mp4',    // 视频连接
+        videoUrl: '',    // 视频连接
         courseItem: '',  // 课程大纲
         imgBaseUrl: cfg.imgBaseUrl,
         isBuy: 0,    // 是否购买课程
