@@ -72,6 +72,16 @@ export default {
       }
     )
   },
+  // 课程播放记录
+  PlayStart:(parameters, callback) => {
+    HttpClient.put(
+      `/users/playState`,
+      parameters,
+      (ret, err) => {
+        callback(ret, err)
+      }
+    )
+  },
   // 分类列表
   listItem: (parameters, callback) => {
     HttpClient.get(

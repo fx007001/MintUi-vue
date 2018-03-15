@@ -45,6 +45,7 @@
           if (err) {
             console.log(err)
           }else{
+            console.log(ret.data)
             this.MyCoursesData = ret.data
           }
         })

@@ -45,7 +45,7 @@
         </ul>
       </div>
     </div>
-    <div class="payCourse" v-if="!courseInfoData.is_buy || courseInfoData.price == 0">￥ 299.00<router-link :to="{'path':'/pay/' + courseInfoData.id}">立即购买</router-link></div>
+    <div class="payCourse" v-if="!courseInfoData.is_buy || courseInfoData.price == 0"><span style="padding-left: 30px;">￥ {{courseInfoData.price}}</span><router-link :to="{'path':'/pay/' + courseInfoData.id}">立即购买</router-link></div>
     <div v-else class="startLearing"><router-link :to="{'path':'/play/' + courseInfoData.id}">开始学习</router-link></div>
   </div>
 </template>
@@ -279,7 +279,7 @@
     width: 100%;
     text-align: left;
     background: $cl1;
-    padding-left: 30px;
+    /*padding-left: 30px;*/
     font-size: 18px;
     line-height: 50px;
     color:$cl13;

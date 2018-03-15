@@ -1,7 +1,7 @@
 <template>
   <div class="learingIndexPlay">
     <div class="vidPlayBox" @click="playVid">
-      <video id="courseVid" :src="videoUrl" controls="" width="100%"  x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto">your browser does not support the video tag</video>
+      <video id="courseVid" :src="videoUrl"  width="100%" autoplay="autoplay" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto">your browser does not support the video tag</video>
       <!--<i v-if="backSub" @click.stop="goBack()" class="icon-plab-back"></i>-->
     </div>
     <div class="title"><span>章节</span></div>
@@ -28,13 +28,21 @@
         videoUrl: '',    // 视频连接
         courseItem: '',  // 课程大纲
         imgBaseUrl: cfg.imgBaseUrl,
-        isBuy: 0,    // 是否购买课程
-        backSub:true
+        isBuy: 0,       // 是否购买课程
+        backSub:true,
+        playParam:{
+          course_id:'',   //课程Id
+          chapter_id:'',  //播放章Id
+          lession_id: 1,  // 播放小节Id
+          time:'0'        // 当前播放时间
+        },
       }
     },
     methods:{
       init: function(){
-        this.getCourseItem(this.$route.params.classId)
+        let _this = this
+        this.playParam.course_id = this.$route.params.classId
+        this.getCourseItem(this.playParam.course_id)
       },
       // 课程大纲
       getCourseItem: function(obj){
@@ -51,8 +59,18 @@
           if (err) {
             console.log(err)
           }else{
+            let _this = this
             this.courseItem = ret.data.chapters
-            this.checkPlayVid(obj, true)
+            this.playParam = ret.data.progress
+            // 播放的初始设置
+            let myVideo = document.getElementById('courseVid')
+            myVideo.currentTime = this.playParam.time;
+            myVideo.addEventListener("timeupdate", function(){
+              _this.playParam.time = myVideo.currentTime
+              _this.playStart()
+            });
+
+            this.checkPlayVid(this.playParam.lession_id, true)
           }
         })
       },
@@ -63,7 +81,9 @@
         if(this.isBuy == 1 || play){
           this.courseItem.map(function(n, i){
             n.lessions.map(function(h, j){
-              if (h.chapter_id == obj){
+              if (h.id == obj){
+                _this.playParam.chapter_id = n.id
+                _this.playParam.lession_id = h.id
                 document.getElementById("courseVid").src = _this.imgBaseUrl + h.video_address;
                 return
               }
@@ -92,6 +112,16 @@
           myVideo.pause();
           this.backSub = true
         }
+      },
+      // 播放状态提交
+      playStart: function(){
+        IndexApi.PlayStart(this.playParam, (ret, err) => {
+          if (err) {
+            console.log(err)
+          }else{
+
+          }
+        })
       },
       //
       goBack: function(){
